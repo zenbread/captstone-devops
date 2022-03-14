@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-fastapi
+  labels:
+    app: capstone-fastapi
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: capstone-fastapi
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: capstone-fastapi
+    spec:
+      containers:
+        - image: zenbread/capstone-fastapi
+          imagePullPolicy: Always
+          name: capstone-fastapi
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-fastapi
+  labels:
+    app: capstone-fastapi
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-fastapi
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

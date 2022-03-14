@@ -1,29 +1,40 @@
 version: 2
 jobs:
-  build:
+  lint:
     docker:
-      # Use the same Docker base as the project
-      - image: python:3.8
-    working_directory: ~/repo
+      - image: python:3.9-alpine
     steps:
       - checkout
       - run:
-          name: install dependencies
+          name: Install make
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            make install
-            # Install hadolint
+            apk add make
+      - run:
+          name: Install linters
+          command: |
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
             chmod +x /bin/hadolint
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      # run lint!
+            pip install
       - run:
-          name: run lint
+          name: Run lint
           command: |
-            . venv/bin/activate
-            make lint 
+            make lint
+
+workflows:
+  default:
+    jobs:
+      - lint
+      # - build-docker
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     filters:
+      #       branches:
+      #         only: [master]
