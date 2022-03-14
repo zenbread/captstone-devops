@@ -20,11 +20,35 @@ jobs:
           command: |
             make lint
 
+  build-docker:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: "20.10.11"
+          docker_layer_caching: true
+      - run:
+          name: Build docker container
+          command: |
+            export DOCKER_BUILDKIT=1
+            docker build . --tag:capstone-fastapi
+      - run:
+          name: Docker login
+          command: |
+            docker login --username ${DOCKER_USER} --password ${DOCKER_PASS}
+      - run:
+          name: Tag and push
+          command: |
+            docker tag capstone-fastapi ${DOCKER_USER}/capstone-fastapi
+            docker push ${DOCKER_USER}/capstone-fastapi
+
+
 workflows:
   default:
     jobs:
       - lint
-      # - build-docker
+      - build-docker
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
