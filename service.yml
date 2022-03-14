@@ -21,7 +21,7 @@ spec:
         app: capstone-fastapi
     spec:
       containers:
-        - image: zenbread/capstone-fastapi
+        - image: zenbread/capstone-fastapi:latest
           imagePullPolicy: Always
           name: capstone-fastapi
           ports:
