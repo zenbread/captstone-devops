@@ -61,7 +61,6 @@ jobs:
       - run:
           name: Test service
           command: |
-            eksctl get cluster --name=<< parameters.cluster-name >>
             kubectl get services
 
 
