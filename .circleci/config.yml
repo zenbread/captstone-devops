@@ -32,7 +32,7 @@ jobs:
           name: Build docker container
           command: |
             export DOCKER_BUILDKIT=1
-            docker build . --tag:capstone-fastapi
+            docker build . --tag=capstone-fastapi
       - run:
           name: Docker login
           command: |
@@ -48,7 +48,9 @@ workflows:
   default:
     jobs:
       - lint
-      - build-docker
+      - build-docker:
+          requires: [lint]
+
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
