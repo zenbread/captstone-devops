@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Test service
           command: |
-            eksctl get cluster --name=capstone
+            eksctl get cluster --name=<< parameters.cluster-name >>
             kubectl get services
 
 
@@ -72,5 +72,5 @@ workflows:
       - build-docker:
           requires: [lint]
       - update-kube-cluster:
-          cluster-name: capstone-fastapi
+          cluster-name: capstone
           requires: [build-docker]
