@@ -62,6 +62,10 @@ jobs:
           name: Test service
           command: |
             kubectl get services
+      - run:
+          name: Rolling update
+          command: |
+            kubectl rollout restart deploy/capstone-fastapi
 
 
 workflows:
